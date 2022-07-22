@@ -83,6 +83,10 @@ function boostrapRule(user, context, callback) {
       if (withSampling && config.sampleLogs && !isFlushingRequired()) {
         // do not perform flushing this time.
         console.log("DEBUG: Skipping sending log entries this time");
+
+        // reset logs
+        resetLogs();
+
         return;
       }
 
