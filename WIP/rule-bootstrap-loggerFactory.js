@@ -1,12 +1,12 @@
 function boostrapRule(user, context, callback) {
 
-  console.log("DEBUG: bootstrap logger factory")
+  console.log("DEBUG: bootstrap logger factory");
 
   const config = {
-    bufferThreshold: 5,
-    sampleLogs: false,
-    samplingRate: 0.05 // 5%
-  }
+    bufferThreshold: 10,
+    sampleLogs: true,
+    samplingRate: 0.2
+  };
 
   /**
    * Create a new Logger instance
@@ -33,7 +33,7 @@ function boostrapRule(user, context, callback) {
           flush: (logs) => {
             console.log("Sending logs");
             for (const log of logs) {
-              console.log(log);
+              console.log("SENT: " + log);
             }
             console.log("Done sending logs");
           }
@@ -63,8 +63,8 @@ function boostrapRule(user, context, callback) {
 
     const generateRandomIndexWithinArray = (arry) => {
       // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
-      min = Math.ceil(0);
-      max = Math.floor(arry.length - 1);
+      const min = Math.ceil(0);
+      const max = Math.floor(arry.length - 1);
       return Math.floor(Math.random() * (max - min + 1) + min);
     };
 
@@ -74,18 +74,20 @@ function boostrapRule(user, context, callback) {
         return targetLogs;
       }
 
-      const sampleIndexes = []
+      let sampleIndexes = [];
 
       // generate a set of sample indexes
       for (let i = 0; i < sampleCount; i++) {
-        sampleIndexes.push(targetLogs[generateRandomIndexWithinArray(targetLogs)])
+        sampleIndexes.push(generateRandomIndexWithinArray(targetLogs));
       }
       // remove duplicate indexes
-      sampleIndexes = [...new Set(sampleIndexes)]
+      sampleIndexes = [...new Set(sampleIndexes)];
       // sort
       sampleIndexes.sort();
 
-      const sampledLogs = []
+      console.log("DEBUG: Sampling the logs in these indexes: " + sampleIndexes);
+
+      const sampledLogs = [];
       for (let i = 0; i < sampleIndexes.length; i++) {
         sampledLogs.push(targetLogs[sampleIndexes[i]]);
       }
@@ -148,7 +150,7 @@ function boostrapRule(user, context, callback) {
 
       showLogs: () => {
         for (let log of logs) {
-          console.log(`DEBUG: ${log}`);
+          console.log(`DEBUG: In buffer => ${log}`);
         }
       }
     };

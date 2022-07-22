@@ -1,17 +1,11 @@
 function rule(user, context, callback) {
 
-  console.log("DEBUG: rule1");
+  console.log("DEBUG: rule2")
 
   const { log, commitLogs, showLogs } = global.loggerFactory();
 
   try {
-    // do business logic
-    log("step 1 for user: " + user.email);
-    // more logic
-    log("step 2 for user: " + user.email);
-
-    log("finished success");
-
+    commitLogs()
   } catch (e) {
     log("facing exception", e);
 
