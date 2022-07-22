@@ -1,7 +1,7 @@
 global.configuration = {
-  logBufferThreshold: "9",
+  logBufferThreshold: "10",
   logSamplingRate: "0.3",
-  sampleLogs: "false"
+  enableLogSampling: "true"
 }
 
 const rules = [

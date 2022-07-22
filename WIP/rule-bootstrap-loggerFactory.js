@@ -4,7 +4,7 @@ function boostrapRule(user, context, callback) {
 
   const config = {
     bufferThreshold: parseInt(configuration.logBufferThreshold || 10),
-    sampleLogs: (configuration.sampleLogs.toLocaleLowerCase() === "true") || false,
+    enableSampling: (configuration.enableLogSampling && configuration.enableLogSampling.toLocaleLowerCase() === "true") || false,
     samplingRate: parseFloat(configuration.logSamplingRate || 0.2)
   };
 
