@@ -3,7 +3,7 @@ function boostrapRule(user, context, callback) {
   console.log("DEBUG: bootstrap logger factory");
 
   const config = {
-    bufferThreshold: 10,
+    bufferThreshold: 5,
     sampleLogs: true,
     samplingRate: 0.2
   };
@@ -61,54 +61,36 @@ function boostrapRule(user, context, callback) {
       return logs.length >= config.bufferThreshold;
     };
 
-    const generateRandomIndexWithinArray = (arry) => {
+    /**
+     * Roll a dice to determine if we need to flush the logs in the current context
+     * @returns a boolean value indicating if flushing is required
+     */
+    const isFlushingRequired = () => {
       // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
-      const min = Math.ceil(0);
-      const max = Math.floor(arry.length - 1);
-      return Math.floor(Math.random() * (max - min + 1) + min);
+      const min = 0;
+      const max = 100;
+      const randomNum = Math.floor(Math.random() * (max - min + 1) + min);
+      const result = randomNum <= config.samplingRate * 100;
+      console.log("DEBUG: isFlushingRequired result: " + result + ", RandomNum: " + randomNum);
+      return result;
     };
 
-    const sampleLogs = (targetLogs) => {
-      const sampleCount = Math.round(targetLogs.length * config.samplingRate);
-      if (sampleCount === targetLogs.length) {
-        return targetLogs;
-      }
-
-      let sampleIndexes = [];
-
-      // generate a set of sample indexes
-      for (let i = 0; i < sampleCount; i++) {
-        sampleIndexes.push(generateRandomIndexWithinArray(targetLogs));
-      }
-      // remove duplicate indexes
-      sampleIndexes = [...new Set(sampleIndexes)];
-      // sort
-      sampleIndexes.sort();
-
-      console.log("DEBUG: Sampling the logs in these indexes: " + sampleIndexes);
-
-      const sampledLogs = [];
-      for (let i = 0; i < sampleIndexes.length; i++) {
-        sampledLogs.push(targetLogs[sampleIndexes[i]]);
-      }
-
-      return sampledLogs;
-    };
-
-    const commitLogs = (ignoreSampling) => {
+    const commitLogs = (withSampling = true) => {
       if (logs.length === 0)
         return;
+
+      // determine if flushing the logs is required for the current context
+      if (withSampling && config.sampleLogs && !isFlushingRequired()) {
+        // do not perform flushing this time.
+        console.log("DEBUG: Skipping sending log entries this time");
+        return;
+      }
 
       // create a copy of the array
       let targetLogs = logs.slice();
 
       // reset logs
       resetLogs();
-
-      // take samples if necessary
-      if (!ignoreSampling && config.sampleLogs) {
-        targetLogs = sampleLogs(targetLogs);
-      }
 
       // transport logs to a target
       appender.flush(targetLogs);
@@ -134,18 +116,20 @@ function boostrapRule(user, context, callback) {
       resetLogs,
 
       /**
+       * Determine if the current log entries needs to be flushed
+       * 
+       * @return a boolean value indicating whether the buffer threshold has reached and need to flush
+       */
+      hasBufferThresholdReached,
+
+      /**
        * log a single message to the cache
        *
        * @param message - mesage to send to sumo
        * @returns {number}
        */
       log: (message) => {
-
         logs.push(message);
-
-        if (hasBufferThresholdReached()) {
-          commitLogs();
-        }
       },
 
       showLogs: () => {

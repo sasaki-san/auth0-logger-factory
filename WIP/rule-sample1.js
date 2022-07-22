@@ -2,7 +2,7 @@ function rule(user, context, callback) {
 
   console.log("DEBUG: rule1");
 
-  const { log, commitLogs, showLogs } = global.loggerFactory();
+  const { log, commitLogs, showLogs, hasBufferThresholdReached } = global.loggerFactory();
 
   try {
     // do business logic
@@ -12,11 +12,15 @@ function rule(user, context, callback) {
 
     log("finished success");
 
+    if (hasBufferThresholdReached()) {
+      commitLogs();
+    }
+
   } catch (e) {
     log("facing exception", e);
 
     // pass ignoreSampling = true to commit all log entries
-    commitLogs(true);
+    commitLogs(false);
 
   } finally {
     // debug

@@ -3,7 +3,7 @@ this.global = {}
 const rules = [
   require("./rule-bootstrap-loggerFactory"),
   require("./rule-sample1"),
-  require("./rule-sample2")
+  // require("./rule-sample2")
 ]
 
 const mockObj = {

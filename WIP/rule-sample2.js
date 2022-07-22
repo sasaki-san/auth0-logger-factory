@@ -1,16 +1,18 @@
 function rule(user, context, callback) {
 
-  console.log("DEBUG: rule2")
+  console.log("DEBUG: rule2");
 
   const { log, commitLogs, showLogs } = global.loggerFactory();
 
   try {
-    commitLogs()
+
+    commitLogs();
+
   } catch (e) {
     log("facing exception", e);
 
     // pass ignoreSampling = true to commit all log entries
-    commitLogs(true);
+    commitLogs(false);
 
   } finally {
     // debug
