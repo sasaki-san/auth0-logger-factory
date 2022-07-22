@@ -1,4 +1,8 @@
-this.global = {}
+global.configuration = {
+  logBufferThreshold: "9",
+  logSamplingRate: "0.3",
+  sampleLogs: "false"
+}
 
 const rules = [
   require("./rule-bootstrap-loggerFactory"),

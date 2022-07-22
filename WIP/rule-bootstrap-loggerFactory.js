@@ -3,9 +3,9 @@ function boostrapRule(user, context, callback) {
   console.log("DEBUG: bootstrap logger factory");
 
   const config = {
-    bufferThreshold: 5,
-    sampleLogs: true,
-    samplingRate: 0.2
+    bufferThreshold: parseInt(configuration.logBufferThreshold || 10),
+    sampleLogs: (configuration.sampleLogs.toLocaleLowerCase() === "true") || false,
+    samplingRate: parseFloat(configuration.logSamplingRate || 0.2)
   };
 
   /**
@@ -22,6 +22,7 @@ function boostrapRule(user, context, callback) {
     }
 
     console.log("global.logger does not exist. Creating one");
+    console.log("configuration: " + JSON.stringify(config));
 
     const appenders = {
       /**
