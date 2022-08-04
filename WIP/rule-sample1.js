@@ -12,10 +12,6 @@ function rule(user, context, callback) {
 
     log("finished success");
 
-    if (hasBufferThresholdReached()) {
-      commitLogs();
-    }
-
   } catch (e) {
     log("facing exception", e);
 

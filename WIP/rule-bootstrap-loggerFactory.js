@@ -135,6 +135,9 @@ function boostrapRule(user, context, callback) {
        */
       log: (message) => {
         logs.push(message);
+        if (hasBufferThresholdReached()) {
+          commitLogs();
+        }
       },
 
       showLogs: () => {
