@@ -1,10 +1,10 @@
 function rule(user, context, callback) {
 
   const d = `trx ${Date.now()}`;
- 
+
   console.log(d + ": DEBUG: rule1");
 
-  const { log, commitLogs, showLogs, hasBufferThresholdReached } = global.loggerFactory();
+  const { log, commitLogs, showLogs } = global.loggerFactory();
 
   try {
     // do business logic
@@ -14,9 +14,7 @@ function rule(user, context, callback) {
 
     log(d + ": finished success");
 
-    if (hasBufferThresholdReached()) {
-      commitLogs();
-    }
+    commitLogs();
 
   } catch (e) {
     log("facing exception", e);
