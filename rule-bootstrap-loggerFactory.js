@@ -10,8 +10,6 @@ function boostrapRule(user, context, callback) {
 
   /**
    * Create a new Logger instance
-   *
-   * @returns {{log: (function(*=): number), commitLogs: (function(): void)}}
    */
   global.loggerFactory = global.loggerFactory || function () {
 

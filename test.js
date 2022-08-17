@@ -1,5 +1,5 @@
 global.configuration = {
-  logBufferThreshold: "10",
+  logBufferThreshold: "5",
   logSamplingRate: "0.3",
   enableLogSampling: "true"
 }
@@ -7,7 +7,6 @@ global.configuration = {
 const rules = [
   require("./rule-bootstrap-loggerFactory"),
   require("./rule-sample1"),
-  // require("./rule-sample2")
 ]
 
 const mockObj = {

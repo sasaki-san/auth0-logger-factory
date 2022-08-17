@@ -1,16 +1,22 @@
 function rule(user, context, callback) {
 
-  console.log("DEBUG: rule1");
+  const d = `trx ${Date.now()}`;
+ 
+  console.log(d + ": DEBUG: rule1");
 
   const { log, commitLogs, showLogs, hasBufferThresholdReached } = global.loggerFactory();
 
   try {
     // do business logic
-    log("step 1 for user: " + user.email);
+    log(d + ": step 1 for user: " + user.email);
     // more logic
-    log("step 2 for user: " + user.email);
+    log(d + ": step 2 for user: " + user.email);
 
-    log("finished success");
+    log(d + ": finished success");
+
+    if (hasBufferThresholdReached()) {
+      commitLogs();
+    }
 
   } catch (e) {
     log("facing exception", e);
